@@ -6,12 +6,14 @@ import SignUp from './pages/SignUp'
 import SignIn from './pages/SignIn'
 import ForgotPassword from './pages/ForgotPassword'
 import Offers from './pages/Offers'
+import Navbar from './components/Navbar'
 
 function App() {
 
   return (
     <>
       <Router>
+        <Navbar />
         <Routes>
           <Route exact path='/' element={<Home />} />
           <Route  exact path='/profile' element={<Profile />} />
