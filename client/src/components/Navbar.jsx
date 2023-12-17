@@ -27,7 +27,7 @@ const Navbar = () => {
             <Link to={'/'}>
               <li
                 className={`text-gray-500 font-medium border-b-[3px] border-b-transparent ${
-                  path('/') && 'text-gray-900 border-b-red-600'
+                  path('/') && 'text-gray-900 border-b-red-600 scale-125'
                 } cursor-pointer`}
               >
                 Home
@@ -36,7 +36,7 @@ const Navbar = () => {
             <Link to={'offers'}>
               <li
                 className={`text-gray-500 font-medium border-b-[3px] border-b-transparent ${
-                  path('/offers') && 'text-gray-900 border-b-red-600'
+                  path('/offers') && 'text-gray-900 border-b-red-600 scale-125'
                 } cursor-pointer`}
               >
                 Offers
@@ -45,7 +45,7 @@ const Navbar = () => {
             <Link to={'signin'}>
               <li
                 className={`text-gray-500 font-medium border-b-[3px] border-b-transparent ${
-                  path('/signin') && 'text-gray-900 border-b-red-600'
+                  path('/signin') && 'text-gray-900 border-b-red-600 scale-125'
                 } cursor-pointer`}
               >
                 Sign in
