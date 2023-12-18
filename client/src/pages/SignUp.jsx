@@ -9,15 +9,19 @@ import { toast } from 'react-toastify'
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({ email: '', password: '', username: '' })
   const { username, email, password } = formData
+  
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
+      setLoading(true)
       if(!username || !password || !email) {
         toast.error('All input fields are required.')
+        setLoading(false)
         return
       }
 
@@ -37,8 +41,10 @@ const SignUp = () => {
       await setDoc(doc(db, 'users', user.uid), formDataCopy)
       console.log(user)
       toast.success('Account created successfully, You can log in now')
+      setLoading(false)
       navigate('/signin')
     } catch(err) {
+      setLoading(false)
       toast.error('Something went wrong with the signup process')
     }
   }
@@ -112,6 +118,7 @@ const SignUp = () => {
               </p>
             </div>
             <button
+              disabled={loading}
               className="bg-blue-600 w-full py-2 mt-5 rounded-md font-medium uppercase hover:bg-blue-700 transition duration-200 ease-in-out text-white active:scale-[.98] hover:shadow-lg"
               type="submit"
             >
