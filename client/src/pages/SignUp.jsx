@@ -32,7 +32,6 @@ const SignUp = () => {
         displayName: username
       })
 
-
       const user = userCredentials.user
       const formDataCopy = { ...formData }
       delete formDataCopy.password
@@ -44,8 +43,8 @@ const SignUp = () => {
       setLoading(false)
       navigate('/signin')
     } catch(err) {
-      setLoading(false)
       toast.error('Something went wrong with the signup process')
+      setLoading(false)
     }
   }
 
