@@ -1,16 +1,46 @@
 import React, { useState } from 'react'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
+import { createUserWithEmailAndPassword, getAuth, updateProfile } from 'firebase/auth'
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore'
+import { Link, useNavigate } from 'react-router-dom'
 import OAuth from '../components/OAuth'
+import { db } from '../firebase'
+import { toast } from 'react-toastify'
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState({ email: '', password: '', username: '' })
   const { username, email, password } = formData
+  const navigate = useNavigate()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log(formData)
+    try {
+      if(!username || !password || !email) {
+        toast.error('All input fields are required.')
+        return
+      }
+
+      const auth = getAuth()
+      const userCredentials = await createUserWithEmailAndPassword(auth, email, password)
+
+      updateProfile(auth.currentUser, {
+        displayName: username
+      })
+
+
+      const user = userCredentials.user
+      const formDataCopy = { ...formData }
+      delete formDataCopy.password
+      formDataCopy.timestamp = serverTimestamp()
+  
+      await setDoc(doc(db, 'users', user.uid), formDataCopy)
+      console.log(user)
+      toast.success('Account created successfully, You can log in now')
+      navigate('/signin')
+    } catch(err) {
+      toast.error('Something went wrong with the signup process')
+    }
   }
 
   const handleChange = (e) => {

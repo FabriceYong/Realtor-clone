@@ -16,7 +16,7 @@ const ForgotPassword = () => {
 
   return (
     <div>
-      <h1 className="text-3xl text-center mt-6 font-bold">Reset Password</h1>
+      <h1 className="text-3xl text-center mt-6 font-bold text-gray-700">Reset Password</h1>
       <div className="flex justify-center items-center px-6 py-12 max-w-6xl  mx-auto flex-wrap">
         <div className="md:w-[67%] lg:w-[50%] mb-12 md:mb-6">
           <img
