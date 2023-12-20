@@ -4,7 +4,6 @@ import { useAuthStatus } from '../hooks/useAuthStatus'
 
 const PrivateRoutes = () => {
     const [ loggedIn, loading ] = useAuthStatus()
-    console.log(loggedIn, loading)
 
     if(loading) {
         return <h2>Loading...</h2>

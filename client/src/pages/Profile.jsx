@@ -1,8 +1,13 @@
 import React, { useState } from 'react'
-import { getAuth } from 'firebase/auth'
+import { getAuth, updateCurrentUser, updateProfile } from 'firebase/auth'
+ import { doc, updateDoc } from 'firebase/firestore'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { db } from '../firebase'
+
 
 const Profile = () => {
+  const [editProfile, setEditProfile] = useState(false)
   const navigate = useNavigate()
   const auth = getAuth()
   const [formData, setFormData] = useState({ username: auth.currentUser.displayName, email: auth.currentUser.email })
@@ -12,6 +17,35 @@ const Profile = () => {
     const onLogout = () => {
       auth.signOut()
       navigate('/')
+    }
+    
+    // edit profile function
+    const handleEdit = (e) => {
+      setFormData({
+        ...formData,
+        [e.target.id]: e.target.value
+      })
+    }
+
+    // submit changes to the database
+    const handleSubmit = async (e) => {
+      try {
+        if(auth.currentUser.displayName !== username) {
+          // update the displayName in firebase authentication
+          await updateProfile(auth.currentUser, {
+            displayName: username
+          })
+
+          // update the name in firestore
+          const docRef = doc(db, 'users', auth.currentUser.uid)
+          await updateDoc(docRef, {
+            username
+          })
+        }
+        toast.success('Profile details updated successfully.')
+      } catch(err) {
+        toast.error('Could not update profile details')
+      }
     }
 
   return (
@@ -23,10 +57,11 @@ const Profile = () => {
             {/* Name input */}
             <input
               type="text"
-              id="name"
+              id="username"
               value={username}
-              disabled
-              className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition ease-in-out"
+              disabled={!editProfile}
+              onChange={handleEdit}
+              className={`w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition ease-in-out ${editProfile && 'bg-red-300 focus:bg-red-300'}`}
             />
 
             {/* Email input */}
@@ -41,7 +76,11 @@ const Profile = () => {
             <div className='flex justify-between whitespace-nowrap text-sm sm:text-lg mb-5'>
               <p className='flex items-center font-medium'>
                 Do you want to change your name?
-                <span className='text-blue-500 hover:text-blue-700 transition ease-in-out duration-200 ml-1 cursor-pointer'>Edit</span>
+                <span onClick={() => {
+                  editProfile && handleSubmit()
+                  setEditProfile(prevState => !prevState)}
+                }
+                  className='text-blue-500 hover:text-blue-700 transition ease-in-out duration-200 ml-1 cursor-pointer'>{editProfile ? <span className='text-red-500 hover:text-red-700'>Apply Change</span> : 'Edit Profile'}</span>
               </p>
               <p onClick={onLogout} className='text-red-500 font-medium hover:text-red-700 transition duration-200 ease-in-out cursor-pointer'>Sign Out</p>
             </div>
