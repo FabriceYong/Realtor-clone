@@ -30,13 +30,13 @@ const OAuth = () => {
         })
         toast.success('Account created successfully')
       } else {
-        toast.warn('User already exists, please login')
+        toast.warn('User already exists, login successful')
       }
       console.log(user)
       setLoading(false)
       navigate('/')
     }catch (err) {
-      toast.error('could nto authorize with Google')
+      toast.error('could not authorize sign in with Google')
       console.log(err)
       setLoading(false)
     }

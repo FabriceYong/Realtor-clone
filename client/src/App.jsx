@@ -9,16 +9,18 @@ import SignIn from './pages/SignIn'
 import ForgotPassword from './pages/ForgotPassword'
 import Offers from './pages/Offers'
 import Navbar from './components/Navbar'
+import PrivateRoutes from './components/PrivateRoutes'
 
 function App() {
-
   return (
     <>
       <Router>
         <Navbar />
         <Routes>
           <Route exact path="/" element={<Home />} />
-          <Route exact path="/profile" element={<Profile />} />
+          <Route exact path="/profile" element={<PrivateRoutes />}>
+            <Route exact path="/profile" element={<Profile />} />
+          </Route>
           <Route exact path="/signin" element={<SignIn />} />
           <Route exact path="/signup" element={<SignUp />} />
           <Route exact path="/forgot-password" element={<ForgotPassword />} />
