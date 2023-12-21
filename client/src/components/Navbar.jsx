@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocation, Link } from 'react-router-dom'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 const Navbar = () => {
+  const [pageState, setPageState] = useState('Sign In')
   const location = useLocation()
 
   const path = (route) => {
@@ -9,6 +11,18 @@ const Navbar = () => {
       return true
     }
   }
+
+  const auth = getAuth()
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if(user) {
+        setPageState('Profile')
+      } else{
+        setPageState('Sign In')
+      }
+    })
+  }, [auth])
+
 
   return (
     <header className="bg-white border-b shadow-sm sticky z-50 top-0 sm:py-5">
@@ -27,28 +41,28 @@ const Navbar = () => {
             <Link to={'/'}>
               <li
                 className={`text-gray-500 font-medium border-b-[3px] border-b-transparent ${
-                  path('/') && 'text-gray-900 border-b-red-600 scale-125'
+                  path('/') && 'bg-red-600 my-2 sm:my-0 scale-125 px-2 rounded-2xl text-slate-300'
                 } cursor-pointer`}
               >
                 Home
               </li>
             </Link>
-            <Link to={'offers'}>
+            <Link to={'/offers'}>
               <li
                 className={`text-gray-500 font-medium border-b-[3px] border-b-transparent ${
-                  path('/offers') && 'text-gray-900 border-b-red-600 scale-125'
+                  path('/offers') && 'bg-red-600 my-2 sm:my-0 scale-125 px-2 rounded-2xl text-slate-300'
                 } cursor-pointer`}
               >
                 Offers
               </li>
             </Link>
-            <Link to={'signin'}>
+            <Link to={auth.currentUser ? '/profile' : '/signin'}>
               <li
                 className={`text-gray-500 font-medium border-b-[3px] border-b-transparent ${
-                  path('/signin') && 'text-gray-900 border-b-red-600 scale-125'
+                  (path('/signin') || path('/profile')) && 'bg-red-600 my-2 sm:my-0 scale-125 rounded-2xl px-2 text-slate-300'
                 } cursor-pointer`}
               >
-                Sign in
+                { pageState }
               </li>
             </Link>
           </ul>
